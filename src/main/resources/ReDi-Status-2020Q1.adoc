@@ -1,0 +1,739 @@
+= ReDi 5.2 Status
+:toc: left
+:toclevels: 4
+:sectnums:
+:sectnumlevels: 4
+
+== Current Issues
+
+When issues are resolved/closed, move them from the *Current Issues* section to the *Old or Resolved issues* section.
+|===
+| Item | Notes
+
+| Venkatesh to host this call in my absence.
+a|
+* When Glynn's conflicts ease he will take over.
+* Venkatesh, please send out invites to this meeting group for Monday.
+
+| BAE environment requirements
+a|
+* 02/04
+** at some point this week BAE testing will commence.
+** This means our testing will stop while BAE is running.
+** Will time slice with Glynn to manage this as best as possible.
+* 02/05
+** Looks like we have this week as there are delays on BAE and dependent components.
+* 02/06
+** no change.
+* 02/11
+** no deployment as of yet in performance for BAE.
+* 02/12
+** No change.
+
+
+| IBI Performance Testing
+a|
+* 02/11
+** 90 days data loaded.
+** solution to page time vs widget time measurement being implemented.
+*** 2 sets of scripts, one for widget time, one for page time (parallel loading of widgets).
+** Blocked today due to OpenShift environment issues that crept in over the weekend.
+* 02/11
+** Unblocked.
+** Waiting on IBI code deployment that has latest performance improvements.
+** Issue with data load overnight (15/10 to 31/10) - CB and Graph labels updates failed. Must be rerun.
+* 02/12
+** 105 Days data loaded.
+** S clients 90 days results posted.
+*** A handful of slow pages. Jira's to be logged.
+** SML clients 90 days test is running.
+** planned data load over night.
+** Why we restart hive\llap\ibi before tests.
+* 02-13
+** Jira logged for profile tab
+** Data load failed overnight - LLAP0 went down - ticket logged. logs too large to view. no insight into what went wrong. Impact ot further data loading.
+** 18CU test conducted
+*** after 50min timeouts to IBI. Errors in IBI logs, same as for the IBI ticket logged.
+*** timeouts < 5% of total transaction counts.
+*** executors are almost flat-lining for LLAP, increasing CU does not seem likely.
+* 02-14
+** Page-time scripts completed.
+** Data load was successful overnight - 120 days loaded.
+** Waiting on IBI ticket response before data load for the weekend - target 180 days by Monday.
+
+
+| IBI transparency dev team to Keith
+a|
+
+* 1/31
+** On target to have all completed by Tuesday.
+** Continuing work today.
+* 2/03
+** On target to compete tomorrow ? Current state?
+** checking rules tabs if all queries are included. cross checking.
+* 2/04
+** a couple more hours to complete.
+** fraud and graph tabs, taking care of suggestion by keith, going to update on wiki.
+* 2/05
+** Keith reviewed all for 5.2, working on 5.2.1
+* Completed.
+* 02/07
+** Anything to discuss today?
+* 02/10
+** Keith progress on query reviews?
+** Kieth working on Queries.
+* 02/11
+** Anything to discuss?
+* 02/12
+** Prashant has question on certain of the queries. question on the wiki.
+* 02/13 wiki analysis,
+** around 10 to complete.
+* 02/14
+** no more progress, no updates from team.
+
+
+|===
+
+== Jiras
+
+|===
+| Jira Ticket | Notes
+
+| https://jira.aciworldwide.com/browse/MERF-22264
+a|
+* 02/12 IBI - Profile Tab does not meet NFR requirements
+** All three sub tabs (All transactions, top 100 transactions by value and top 100 transactions by volume) miss the NFR.
+** solution proposed by Keith, added to the ticket.
+* 02/13
+** Dev team investigating the ticket and proposed solution.
+* 02/14
+** changes in progress, will discuss after tested in dev.
+** Monday to deloy updates to performance.
+
+| https://jira.aciworldwide.com/browse/MERF-22165
+a|
+* IBI - Summary/Recommendation tab search does not meet NFR requirements
+* 2/12 *Closed, issue in how we measure the page time.*
+
+
+| https://jira.aciworldwide.com/browse/MERF-22166
+a|
+* IBI - Summary/Child Organizations tab search does not meet NFR requirements
+* 02/12 *Closed, code fixes in perf environment.*
+
+| https://jira.aciworldwide.com/browse/MERF-22169
+a|
+* IBI - Summary/KPI tab search does not meet NFR requirements
+* 02/12 *Closed, issue in how we measure the page time.*
+
+|===
+
+== Performance Environment Tickets (IBI/Cloudera)
+
+|===
+| Ticket Nr. | Details
+
+| IBI - 200205037 - IBI becomes unresponsive / Exception in IBI logs
+a|
+
+We have on multiple occasions seen IBI become unresponsive. In logs we have exceptions related to the IBI database (foreign key violations)
+
+* 02/12 - us to provide new logs and time of the crash.
+* 02/13
+** shared DB status for reporting server.
+** follow up call today.
+** esccalate, soon to be a blocker.
+* 02/14
+** Webex last night. Identified the exceptions we are seeing is associated with portals being created.
+** No idea why they are seeing this, it is not from a test flow. Portals are new UIs or UI components being added.
+** Derby DB and silk scripts (for URLS that are accessed) provided, waiting on feedback.
+
+
+
+| Cloudera - 658797 - LLAP crashed for weekend run and unable to find the Root Cause
+a|
+* 02/13
+** LLAP crashes during data load.
+** LLAP logs too large to get, cant analyse what went wrong.
+** need help from cloudera.
+* 02/14
+** Feedback on Monday, Mariano is out today.
+** Log levels for LLAP logging.
+
+
+| Cloudera - 653597: Performance issues for Hive Queries - Vectorization Patch
+a|
+* 2/03
+** updated in development. working in development.
+** Mariano - testing with small amount of data, want a larger data set.
+** statistics for beeline queries in performance has issues.
+*** immediately log ticket for beeline query stats to work.
+* 2/04
+** patch installed, looks to work. Keith update?
+** Shows a reduction in performance with distinct type.
+** run 3 tests
+*** combine distinct, non distinct aggregates
+*** only non distinct aggregates
+*** only distinct aggregate
+* 2/05
+** feedback from Keiths testing
+* 02/06
+** Any updates from Cloudera
+** Still pending.
+** possible revert of IBI patch.
+*** slowed down distincts.
+*** revert once IBI tests stable.
+* 02/10
+** Updates from cloudera?
+** Shared working and not working logs.
+** Mariano to provide feedback today.
+* 02/11
+** need explain query for cloudera, status updated.
+* 02/12
+** call with Mariano, updated engineering team internal jira. Get an update again today from Mariano.
+* 02/13
+** Quick update: Engineering will provide a dev jar for HIVE-22828 on top of HIVE-22786.
+** No ETA. Escalated internally on their side.
+** Request ETA , follow up tomorrow call.
+* 02/14
+** Patch to be release today (US time zone).
+** Once available e applied in dev cluster.
+
+|===
+
+
+== Old or Resolved Issues
+
+|===
+| Item | Notes
+
+
+| Performance Openshift issues
+a|
+
+* 02/10
+** Multiple applications dpeloyed to performance openshift are not working as of this morning.
+** Impacting multiple products.
+** No resolution as of yet.
+* 02/11
+** Resolved, FireWall issue with VIP
+
+
+| DAS Installation in performance
+a|
+* 02/07
+** What is priority?
+** Do we postpone data loading for this?
+** DAS Lite - featue missing. qquery and table operation recommendation, read and write report not supported in DAS lite.
+** To get feedback - keith will mail cloudera.
+•	Query optimization recommendation
+•	Table optimization recommendation
+•	Read and write report
+•	Join report
+
+
+| Data loading
+a|
+* 2/04
+** Stage data created
+** load scripts updated
+** confirmation on CB rates
+** Will attempt load for a couple days when env is available.
+*** Mayank - need help recreating tables in redi database for data load.
+
+
+| Vectorization - Cloudera Patch
+a|
+* 1/17 Possible Cloudera patch - found when doing a count distinct and group by - bug where there is no vextorization. Fix exists, we need it to be applied.
+** Keith to provide patch details to Murugesan.
+* 1/20 - do we have patch, or an ETA on patch?
+** Some confusion, Mariano and Peter chatting. Query provided.
+** Update later today.
+* Patch Validation?
+** Targeted validation testing?
+* LLAP Changes, concerns and date - setup a call.
+* All patches in play
+** Keith, GLynn, Murugesan, Steve.
+* 1/21
+** Meeting tomorrow to discuss patching and validation.
+** Any news from Cloudera on availability.
+*** No ETA, at dev team for dev jar, following validation get official path.
+* 1/21
+** no update, will request a date for the patch.
+* 1/23
+** Dev patch received, does not work, was reverted in dev.
+* 1/24 applied in dev. Validated
+** validation did not show expected behaviour, back to cooudera.
+* 1/27
+** No updates
+** Escalation?
+* 1/28
+** escalated, eng. team is looking.
+** "In other words, this feature has been disabled upstream for this particular use case likely because of correctness issues and it might not be trivial to bring it back. One of our engineering resources (Gopal Vijayaraghavan) reviewed the change upstream. We will know his verdict shortly."
+** Monitor issue, doing best they can.
+* 1/31 no update, waiting on long duraiton run to complete.
+* 02/07
+** Vectorization patch caused DENSE_RANK() function error.This is responsible for errors in the IBI Profile page.
+** Patch reverted.
+
+
+| Data loading
+a|
+* 1/20
+** no progress, 100% consumed on scripting
+* 1/21
+** reviewed and updated data load scripts.
+** Next steps - create new staging data that matches requested transaction distribution among clients. Apply chargeback and monthlabel updates for chargeback UIs, use this to load historic data.
+** Aim to run a data load over the weekend.
+* 1/21
+** additional col YYYYMM col
+** data load and ingest. look at having this included for thw weekend run.
+* 1/22
+** email to dev requesting this new column added in next code drop Ireceive - waiting on response.
+*** estimated 2 days. So this can be picked in next few days but not as part of current release
+** Benchmark updates now enable fine control (down to 0.1%) the transaction volume distribution among clients.
+* 1/24
+** 2 weeks for testing
+** 2 weeks for integration.
+** counter starts Monday.
+** 4 weeks to estimated GA.
+* 2/03
+** to start now that backend testing is wrapped up
+
+| IBI transparency dev team to Keith
+a|
+
+* 1/23
+* Glynn talked to Aravind, devs had given Keith everything he needed.
+* Keith got something weeks ago, apparently nothing new since then.
+* HAs Keith reviewed everything that is being worked on or deployed to performance.
+** Want to be confident that UI should perform at a relative level, not require complete rewrite after we look at it.
+** Keith should be involved in all the reporting work.
+** When is next deliverable, review required by Keith.
+** new SQL needs to be updated on the wiki for Keiths review.
+** venkatesh - explicit taks requiring a review from Keith.
+** RK - update the wiki page - early next week (Monday)
+** Barry\Glynn let Keith know of slow queries.
+* 1/24 no update, check in Monday on progress to above requests.
+* 1/27
+** Wiki updated with all queries?
+** Entire body of queries, including those previously release. all included in this release. need to be up-to-date.
+** update tomorrow from Venkatesh. Date for these being completed.
+** which queries in which release. 5.2 +.
+* 1/28
+** Update from Venkatesh - wiki state, date for all requested information available.
+** Current relese, completed fo rprofiling, CB and SAE. Summary 3 tabs completed. Aim to complete tomorrow. Rules and remaining tabs will start from Monday.
+** poc for next release + aggregation eng. needs this info. analysis is fundamental to future direction.
+** Wiki completed Monday EOD, Keith analysis to follow. aim EOW.
+** process change, last modified date with queries.
+* 1/29 wiki issues, delayed publishing. Today aim to complete for summary in the 5.2 release.
+* 1/30
+** update on progress?
+** Summary tabs completed - all 5.2 tabs.
+** pending 2-3 tabs to complete by tuesday.
+
+
+| E2E testing in perf environment.
+a|
+* 1/30
+** Progress? how much longer?
+* 1/31 - null pointer exceptions in logs
+** progress?
+
+| Performance Shadow
+a|
+* 1/30
+** Aravind, Mayank - the meeting has not been accepted by either of you, are you able to attend or must it be rescheduled?
+** 2 weeks from Monday 3rd Feb until I am on Paternity leave.
+
+| ReDi Streaming Regression Testing
+a|
+* 1/21 new code drop for ingestion.
+** regression testing
+** update to data load script for rule hits.
+** work with Mayank on this wen cod eis availble.
+* 1/22 When will this be deployed to performance?
+** work with Anand on deploy, available from tomorrow - Webex with anand on deployment,.
+* 1/23 arrange meeting to deply to perf tomorrow.
+* 1/24 are we good to deploy?
+* 1/27 *BLOCKED* application failures over weekend.
+** cant commit aborted transaction errors.
+** running a test with previous code drop to determine if thi sis an env. related issue or code change related.
+** same issues encountered - point to an env. issue.
+* 1/28 looks to be due to krb5 being overwritten by ambari, settings provided by cloudera were removed.
+** Overnight run a success with old code.
+** once env. is restarted will attempt run with the new code.
+** *CONFLICT* RA 2.4 GA thrusday, ReDi Friday. Conflict on environment with BAE running at same time as streaming.
+** Need meeting to discuss with stakeholders. Anoop, Deepthi and us. Venkatesh, Anoop, Will, Deepthi.
+** Risk id + shorter duration test (over night)
+* 1/29
+** no failures in 500TPS overnight run.
+** investigating performance hit
+** found tables configured in automated deployment are not part of compaction schedule. Corrected, waiting for compaction to complete and will observe again.
+** Need to check this as part of deployment.
+** Do we need this code change? vs accept 500TPS on a 16hr run.
+* 1/30
+** Provisional GA pending weekend run at 500TPS.
+** Short run this morning after compaction fix shows slight improvement, not the silver bullet.
+* 1/31 started 72hr run.
+** To complete Monday 1:30pm UTC+2 (just before this status call).
+* 2/03
+** 72hr run completed successfully at 500TPS.
+** will post result this afternoon.
+| IBI Tickets
+a|
+* Double Querying
+** 1/13 IBI still looking into it, can reproduce, no solution.
+** 1/14 senior most management at IBI, product team workin gon this.
+** 1/17 fixed, awaiting patch. next day or two.
+*** coord with perf team.
+** 1/20 Patch received, installed. being validated.
+*** No testing until patch applied and confirmed working. Delays to perf testing.
+* 1/21 Patch being applied in performance.
+* 1/22
+** Patch applied, but broke SSO.
+** How did we test the patch is applied successfully before handing over to the performance team? Was a login to control center attempted?
+
+| Hadoop Environment Issues
+a|
+
+* 1/28
+** krb5 conf
+
+1/24 environment back up and running.
+** no change in situation, cant run command against llap1
+** Eng are analysing the issue.,
+* 1/27
+** call with cloudera, debug with beeline.
+*** logs shared, waiting for more feedback,
+** Speedpay requesting time on perf. environment.
+*** Steve involved with Speedpay.
+*** needs proper coord
+*** Glynn to send details of those involved to Steve.
+
+
+| Rules Tab - join Conditions\dynamic Filters
+a|
+* 1/14 in cloudera workshop this week.
+** running queires, analysis, behind the scenes activity.
+** possible different partitioning, bloom filters from cloudera. experiments today.
+** If scheme changes, additional predicates to all queries. larger files, fewer files for compaction.
+** possible hdfs block size, per node and only new tables for tests.
+** metadata from many files overhead to execution plan.
+** pre-aggregation focus tomorrow - 5.3 release, unlikely 5.2.
+** stand-by for murugesan?
+* 1/15 data volume issues with new loaded data.
+** trying to get systmeto perform well with mix of clients (high, medium, low).
+** design for this solution, volume we design for.
+** risk of not handing a large increase in load. Proposal to address this:
+*** multiple data sets, at nfr levels and larger for other testing. used for different testing.
+*** offline to decide on this.
+* 1/16 Workshop update
+** progress
+*** better how to tune hadoop hive infrastructure
+**** possible delay to schedule for this.
+**** over-partitioned -> impact to hive performance, metadata . many small files.lots of file scanning.
+**** impacts no. of tasks -> executor usage.
+**** partitioning, block and stride size.
+**** client/month partitioning investigated.
+**** requires additional predicate.
+*** reach conclusions that suggest pre-aggregation of data is important and how to hybridise aggregation with detailed transactional data in result set of each report. Not for wave 2 release.
+* 1/20
+** recommendations have not provided benefits they hoped.
+** Peter continues to work very hard to identifying patches that help us.
+** Join to rules has a cost, not the biggest issue. Summary with group-by with rule-hits (large volume) that does not join to rule-description. Simulated DD into rule details, not great (5-7sec stand alone).
+** Real problems on aggregations to rule hits due to large volume. Peter is focusing on this.  Aggregations against trans_master_core and rule hits (counts).
+** Data skew issue in Hadoop. Extremely small cluster. Not used for online-rpeorting (atypical)
+* POC on PostgreSQL with Paul Crocker, looking at diff possible solution.
+* 1/22
+** Pattern of access to solve issue is identified. Cloudera folk were to do some experiments.
+** aggregation engine requirements being finilized for design. not 100% confirmed, some prototyping on postgresql to see if rule hits performance will satisfy queries.
+** scanning 5mil rule hits records ~ 600k trans in 1..3sec range.
+** tran data in hdp, agg data in postgresql, merge in IBI. not confirmed, but current favourite solution.
+* 1/23
+** rule details out of scope, rule hits in scope.
+
+
+| IBI Functional development
+a|
+* 1/17 IBI team call with Keith.
+
+| ReDi 5.2 Back End Release
+a|
+* 1/17 - 31 Jan GA date - components?
+** What about integration testing?
+** seperate release to ui.
+** Take offline to schedule discussion.
+
+
+| IBI Query Changes
+a|
+* 1/15 If every query is to be changed to add predicate to a where clause (dateyyyymm between x and y) what is the effort, impact of this requirement on every query.
+
+** 1/16 Discussed with team this morning in sprint planning. Venkatesh will discuss with required people.
+*** High level estimate is between 100 and 200 hours.
+
+|Rule Hits - Data not loading - issue is on IBI servers, need IBI help
+a|
+* @rameshJ and Prabu for update
+* 1/2: Prabhu will call Ramesh J to open ticket
+* 1/3: Problem found (removed unnecessary join w/trans master core)
+Page is now loading but still analyzing for other 2 tabs
+Should be resolved by Monday
+* 1/6 rule hits is working, slowness in chart loading. under investigations. Update tomorrow.
+* 1/7 no updates. - still in investigation stage.
+* 1/8 no updates. - still in investigation stage.
+* 1/9 ticket, waiting.
+* 1/10 related to issues of clear cache in perf and UAT server, all logs uploaded.
+
+
+
+| Rules Tab - join Conditions\dynamic Filters
+a|
+* 1/2: Team will meet offline and provide update on 1/3
+* 1/3: No solution yet - POC required for final solution but will not fit in 5.2 timeline
+* 1/6 Keith, KP, Steve, Kesav met. No interim solution yet. Update tomorrow.
+* 1/7 populating data for tables to test theories.
+* 1/8 Blocked due to permission denied issues.
+* 1/9 loading data, blocked as llap0 is down.
+* 1/10 - debate on tech approach, fundamental issue to be concider by the team, functionally incorrect queries? Clarify function requirements. Rule tab queries KP and prabu confirming functional correctness. Get perf team involved in functional definition.
+* 1/10 use denormalization techniques, avoid joins.
+* 1/13 work on getting denormalized cols from trans master to rule hits. Template for how to deal with these queries is worked out. Minimize joins.
+
+|
+Data Missing in Columns list for Profiling, Chargeback, Operational Statistics, Rules and Summary Tab
+a|
+* 1/2: Request sent to Ramesh J to confirm what columns are needed
+* 1/3: Ramesh says "ALL" but further conversation is needed - Mayank to book call w/Ramesh for early Monday
+* 1/3
+* 1/6 : held meeting, cols were populated. update tomorrow.
+* 1/6 list provided to Mayank, scripts being written to populate data.
+* 1/7 scripts prepared for chargeback and fraud data. Being tested ~ 75%
+complete.
+* 1/8CB and Fraud are existing, checking for other missing data.
+* 1/8 no update, still validating.
+
+
+| Barry - Offical Shadow for my Paternity Leave
+a|
+* 1/7 need it confirmed for training etc. before I go out.
+* 1/7 probably Mayank, to confim next week from Aravind.
+* 1/8 confirm by end of week.
+* 1/9 Aravind to confirm EOD today.
+* 1/13 Mayank to be my shadow.
+
+| Backend job failures
+a|
+* 1\6 exception - aborted transactions.
+* 1\6 case 650608 opened.
+* consultation (maybe) week of 13th), if we need topic around stabalization need to know sooner rather then later.
+* 1\7 Encountered issue in overnight run again, this was after some updates to krb5 config. Ticket updated.
+* 1\7 requested to set *spark.security.credentials.hiveserver2.enabled=true* and test overnight from Cloudera.
+* 1\8 again failure overnight, info back to cloudera.
+* 1/9 Logs were 175GB in size, could ot provide to cloudera (they have the stack traces we could obtain).
+* 1/9 Using a custom log4j on spark submit to set log level to warn. Plan to run overnight and gather new logs.
+* 1/10 clean run overnight, no errors but some warnings.
+* 1/10 Issue in verbose output found in streaming job, Mayank and Anand to investigate, causing massive logs.
+* 1/13 - resolved, successfull 72 hour test run and results reported.
+
+| Hadoop Environment Issues
+a|
+* 1/8 650608 - invalid txn id, transactions closed.
+** 1/9 Spark logs 175GB in size, could not provide to cloudera, need to gather new logs of smaller size.
+** 1/9 Possible solution for excessively large spark streaming logs - custom log4j.properties passed in with spark-submit.
+** 1/10 Log reduction in place, had error free 12 hour run. Some warning present in logs I have requested information on.
+** 1/10 getting verbose output in stdout of streaming job, every transaction all fields.
+** Not log4j output
+** 1/13 *Resolved* - bug in build I was testing cuasing excessive logging (75MB/sec) to std-out.
+* 1/10 651883  - Unable to access the YARN Application logs which getting denied from yarn user too.
+** 1/13 *Resolved* - bug in build I was testing cuasing excessive logging (75MB/sec) to std-out.
+
+
+| IBI Performance Testing
+a|
+* 1/7 - 7 scripts work with data and non-sso env.
+* 1/7 - *7 scripts do not exist at all*
+** rules, charge-back, op-stats, summary today
+** For SSO - all scripts need to be re-created.
+* 1/7 - Blocking issues for scripting
+** Summary today - no data not complete
+** All chargeback - no data
+** Rules not working - dependent on data load and rules join.
+** Op stats - operational stats not completed - no page loading.
+** IBI upgrade broke existing scripts.
+* 1/7 Glynn and Myself to have time to look into the state of scripts and UIs tomorrow to get some estimation of effort involved.
+* 1/8 Waiting on confirmation of work flows from Ramesh J.
+* 1/8 Hangs on operational tab. Control center not hangs on sso.
+* 1/8 Issues in UI, logs to IBI. - non functional at moment
+* 1/9 IBI landing page changed , temp removal of op-stats, rules and search. Could log in again.
+** 1/9 any update as to root cause @RameshK.
+* 1/9 Attempting to step through scripts we have to see what may still work, no luck yet. All experience errors (404, 500 etc) when running. Blocked today due to LLAP0 going down.
+** ops tab query without client id on all data. Very risky due to the massive query.
+* 1/10 Not able to hack SSO into non SSO scripts, we will need to re-record the scripts.
+* 1/10 Drill downs taking 50sec-60sec. Somthing is wrong.
+* 1/10 date for a date -
+* 1/13 Recorded a work flow (summary monthly trends) after many struggles. Now to figure out session handling and parameter replacement.
+* 1/14 figured out session management for login.
+** now on to parameter replacement.
+* 1/14 IBI landing page and missing tabs.
+* Summary , per client landing page . all clients land on summary for now.
+* 1/15 summary monthly trends and summary recommendations scripts completed , single user test indicates working correctly.
+** Busy on summary challenge deny.
+** can the CC/IBI user login multiple times?
+** If every query is to be changed to add predicate to a where clause (dateyyyymm between x and y) what is the effort, impact of this requirement on every query. to IBI team. add to tracker tomorrow.
+* 1/15 All summary tab scripts recorded, session management and parameter replacement done. Need to add validation - meeting with Vijendra about this later in day.
+* 1/16 Charge Back tabs
+** initial search on all tabs returns results. subsequent drill downs do not return anything.
+** RK looking into the blank display issue on drill down. estimates a day to two.
+** Blocked on IBI
+* 1/17
+** refined existing scripts after a chat to Vijendra
+*** removed uneccesary pauses on operations, double calls from recorded scripts. Some validation on expected pages.
+** Still blocked on creating charge back scripts for IBI. RK is investigating and will inform when a fix is pushed to performance.
+** Issues discovered in Profile page - no data, blank screens. Will send a mail .
+** scripting vs testing, can't do both at same time.
+** summary reccomendation pulls wrong sub-clients.
+* 1/8 644677: Unable to run the Spark-submit getting permission denied exception for /tmp path
+** 1/10 waiting on cloudera, they have configs and logs.
+** Can we escalate? Aravind?
+** 1/13 Multiple Webex's, waiting on feedback from Cloudera after latest logs and info provided.
+** 1/14 Request from cloudera to create new hive user (diffierent name) and do all the config in cluster to change this (massive changes), Need to discuss. Very risky.
+** 1/17 approximately a half days effort to make the change in the cluster for the hive username.
+** previous case was found, after upgrade to HDP 3 we experienced issue with "_" in the name and were requested to use "-".
+** need a call on if and when Murugesan can make this change.
+* 1/20 Plan to make this change Wednesay \ thursday morning IST. Waiting on scripting for IBI. Trying to find a time to minimize impact.
+* Fix being applied Wednesday 22/01/2020 IST morning.
+* 1/22
+** The above recommendation has broken our cluster, waiting on cloudera to help us.
+** *All performance work is blocked.*
+* 1/23
+** LLAP0 up and running.
+** LLAP1 is down. - no ingestion or data loading
+*** *Please ensure Mariano is available at 9am as he indicated in the email.*
+* 1/20 Fri 24 date for having CB, Summary and Profiling scripts completed. This provided no issues found.
+** Data issue with Chargeback by recommendation
+*** graphlabelmonth in bi_trans_master_core does not have expected values (passing in null\black string) Mayank looking into this.
+** Profiling tab silk script completed.
+** Chargeback tabs in progress.
+** Running into issue with landing page changing making scripting tricky. Is there anyway to override IBI taking the user to the last visted page?
+** On target for given date.
+** Subclient issues in summary recommend, update RK, Glynn
+** Missing data - script today to fix.
+** scripting vs running early testing.
+** Tomorrow - need resource to look into issues we find, and we can run a test and provide feedback.
+* 1/21
+** Scripting completed - summary, profile, chargeback
+** Issue with incorrect sub-clients in drop-downs on Summary recommendation tab still exists - will cause severe error rate in UI testing as this causes no data available issue. @Ramesh K, any update? CB recommendation, summary recommendation pages.
+*** take offline.
+** Starting with mutli-user validations.
+* 1/22
+** Blocked due to IBI patching breaking SSO, then hive user change to resolve cloudera ticket broke the perf environment.
+** No progress.
+* 1/23
+** IBI patch broke all silk scripts.
+** Busy fixing and validating they are working today.
+** los 3 days this week (hadoop down, CB pages getting fixed, data fixes etc.)
+** Rules descoped from 5.2 release.
+* 1/27
+** investigating test errors - side tracked on backend job testing.
+* 1/28
+** Still investigating cause of errors in testing, not much time as have been concentrating on backend.
+** all efforts on backend GA - little progress in IBI.
+** Code freeze on IBI by Thursday 30th..
+** Structural query changes recommended by IBI, POC Keith , Steve, RK, if recommended and shows value, when is next release to include these? include in 2B? 5.2.1 what is schedule - dependent on Rule hits POC changes.
+* 1/29
+** Found issue in test data, rule IDs are generated in range 1-14mil, we only have ruleids in trans_details to 13490879
+* 1/30
+** Waiting on data generation to validate scripts.
+* 1/31 - no update
+* 2/03
+** Moving focus back to IBI from this afternoon.
+** first is data generation and load.
+** Then script validation followed by testing.
+* 2/05
+** 16 Days (15-31 jan) loaded overnight.
+** script validation went well.
+** Only errors now on Profile tab.
+** Initial run completed.
+*** 8CU, 15 days data, exclude profile tab.
+*** timouts encountered to IBI.
+** Barry to find the queries for slowest pages.
+* 2/06
+** Yesterdays results invalid - IBI application errors\issues.
+** Ticket at IBI, waiting on response.
+* Restarted Hive + IBI and ran tests today.
+** Significantly improved results.
+** existing issue - any click on serch button - IBI is taking a large time to communicate with hive. ticket logged with IBI.
+** sitll to log Jiras.
+* 02/07
+** Vectorization patch caused DENSE_RANK() function error.This is responsible for errors in the IBI Profile page.
+*** Patch reverted but errors still encountered.
+*** Issues in IBI after revert, required restart that had issues.
+** Found issue in silk with sequencial execution of posts. This resulted in search times being sum of individual widget times.
+*** We can choose either measure page time with parallel widget loads, or have sequencial widget loads and measure widget times.
+** 45 Days data loaded. Targeting load of 45 days over the weekend. 90 by monday.
+** updated IBI code to be deployed - perf enhancements.
+*** want to validate env. is back to normal before deploying. had issues with IBI this morning. timeouts and problem on restart.
+** Profile page still not working
+*** worked in dev after patch revert, get results returned in hive. Perf IBI still does not work. Attempting an IBI restart .
+
+| SSO in Perf
+a|
+* 1\6 Now Working
+* 1\6 requires a re-create of scripts to work with control centre URL.
+* 1\6 We *DON'T have scripts that work with SSO*
+
+| Performance testing of Rules-related pages/tabs
+a|
+* 1/2: BLOCKED
+* 1/3: BLOCKED - meeting w/Vijendra on Monday
+* 1/6 BLOCKED - *No Scripts available for these tabs.*
+
+| Dates for delivery?
+a|
+* UI delays are severe.
+* No scripts for rule tabs.
+* SSO scripts not available.
+* need to set expectations.
+
+| Grinder updates
+a|
+* correct ratios and entries for rule-hits to match rule details.
+* ratio of 1:8 - transaction : rule hits
+* investigating changes
+* Taking offline from status call
+
+| Missing Data
+a|
+* 1\3 Data Missing in Columns list for Profiling, Chargeback, Operational Statistics, Rules and Summary Tab
+* Replaced by item 1
+
+| Data Generation
+a|
+* 1/3: 90 days generated - what about more?
+1/6* load the bi_ tables.
+* need update for rule_hits, also overnight.
+* scripts available, need time to run. no point in tracking every call.
+
+| Double querying
+a|
+* 1/2: Ticket opened w/IBI - meeting scheduled for Monday
+* 1/3: No update
+* 1/6 : No update, call today or tomorrow.
+* 1/7 Discussion with IBI, they requested moe details. continous workshops today and tmorrow, next meeting Thursday.
+* 1/7 logs provided to IBI
+* 1/8 had workshop, and today. in progress and will take all issues. no ETA available for fixes. update tomorrow.
+* 1/9 vendor can reproduce, waiting on fix/updates.
+* 1/10 first time two requests, all others one request, escalated.
+* 1/13 IBI still looking into it, can reproduce, no solution.
+* 1/14 senior most management at IBI, product team workin gon this.
+
+| IBI Tickets
+a|
+* Rule Hits - Data not loading
+** 1/14 Queries within widget, union all as recommended.
+*** POC seems to be working, .sql view.
+
+
+
+|===
